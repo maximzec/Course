@@ -10,39 +10,65 @@
 #include <fstream>
 #include "../Models/Individual.h"
 
-class FileManager {
-private:
-    std::ifstream fileIN;
-    std::ofstream fileOUT;
+void writeData(std::vector<Individual> i1, std::vector<Organization> o1)
+{
+    std::ofstream f("../UserData/Individual.txt");
+    for(std::vector<Individual>::const_iterator i = i1.begin(); i != i1.end(); ++i) {
+        f<<i->getName()<<'\n' << i->getSurname() <<'\n' <<  i ->getMidname() <<'\n' << i->getTIN() << '\n' << i->getCitizenship() << '\n' << i->getM_status()<<'\n' << i->getSex() <<'\n' <<i->getAge() <<'\n' << i->getUniq_key()
+          <<'\n' ;
+    }
+    f.close();
 
-public:
-    FileManager() {
-        fileIN.open(R"(C:\Users\User\CLionProjects\Course\data.txt)");
-        fileOUT.open(R"(C:\Users\User\CLionProjects\Course\data.txt)", std::ios::app);
-        if (!fileIN.is_open()) {
-            std::cout << "Problems with file opening";
-        } else {
-            std::cout << "Ready to write data";
-        }
-        if (fileOUT.is_open()) {
-            std::cout << "Ready to get data";
-        }
+    std::ofstream f1("../UserData/Organization.txt");
+    for(std::vector<Organization>::const_iterator i = o1.begin(); i != o1.end(); ++i) {
+        f <<'\n'<<i->getID() <<'\n' << i->getName()<< '\n'<< i->getAdrress() << '\n' << i->getPhone_number() << '\n' << i->getHolder() <<'\n' << i->getTIN() <<'\n';
+    }
+    f1.close();
+}
+
+
+void readData(std::vector<Individual> *i1 , std::vector<Organization> *o1)
+{
+    std::string stroke , name , surname , midname , TIN , citizenship , m_status;
+    int age ;
+    char sex;
+    unsigned int uniq_key;
+    std::ifstream f("../UserData/Individual.txt");
+    if (!(f.is_open())) {
+        std::cout << "File openning error!" << std::endl;
     }
 
-    void uploadData(Individual individual)
+    while(!f.eof())
     {
-        fileIN.open(R"(C:\Users\User\CLionProjects\Course\data.txt)", std::ios::in);
-        fileIN.close();
-    }
+        std::getline(f , name);
+        std::getline(f , surname);
+        std::getline(f , midname);
+        std::getline(f , TIN);
+        std::getline(f , citizenship);
+        std::getline(f , m_status);
+        f >> sex;
+        f >> age ;
+        f >> uniq_key ;
 
-    void downloadData(Individual individual)
+       i1->push_back(*(new Individual(name  , surname , midname , TIN , citizenship , m_status , age , sex , uniq_key)));
+
+
+    }
+    f.close();
+    std::string name1 , address, phone_number, TIN1 , holder , id;
+    int ID;
+    std::ifstream f1("../UserData/Organization.txt");
+
+    while(!(f1.eof()))
     {
-        fileOUT.open(R"(..\data.txt)", std::ios::app);
-        fileOUT << individual.getName()  << "/" << individual.getMidname() <<  individual.getSurname()  << "/"  << individual.getAge()  << "/" << individual.getSex()  << "/" << individual.getTIN()  << "/"
-        << individual.getCitizenship()  << "/" << individual.getM_status()  << "/";
-        fileOUT.close();
+        f1 >> ID ;
+        std::getline(f1 , name1  );
+        std::getline(f1, address );
+        std::getline(f1 , phone_number );
+        std::getline(f1, holder );
+        std::getline(f1, TIN1 );
+        o1->push_back(*(new Organization(ID , name1 , address , phone_number , holder , TIN1 )));
     }
-
-
-};
+    f1.close();
+}
 #endif //COURSE_FILEMANAGER_H

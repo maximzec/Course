@@ -26,8 +26,10 @@ public:
         this->TIN = "";
     }
 
-    Organization(std::string address , std::string phone_number , std::string holder , std::string TIN)
+    Organization(int ID , std::string name ,std::string address , std::string phone_number , std::string holder , std::string TIN)
     {
+        this->ID = ID;
+        this->name = name;
         this->adrress = address;
         this->phone_number = phone_number;
         this->holder = holder;

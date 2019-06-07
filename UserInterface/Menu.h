@@ -8,6 +8,7 @@
 #include <vector>
 #include "../Models/Individual.h"
 #include "../Models/Organization.h"
+#include "../FileManager/FileManager.h"
 #include <iostream>
 #include <iterator>
 #include <algorithm>
@@ -19,12 +20,10 @@ private:
 public:
     Menu()
     {
+        readData(&IndividualData , &OrganizationData);
         this->state = 0;
     }
-    Menu(int state)
-    {
-        this->state = state;
-    }
+
 
     void printMenu() {
 
@@ -37,7 +36,8 @@ public:
                     std::cout << "2.Delete information" << std::endl;
                     std::cout << "3.Show all" << std::endl;
                     std::cout << "4.Search by values" << std::endl;
-                    std::cout << "5.EXIT" << std::endl;
+                    std::cout << "5.Sort data" << std::endl;
+                    std::cout << "6.EXIT" << std::endl;
                     std::cout << "Enter you choice:";
                     std::cin >> choice;
                     this->setState(choice);
@@ -72,7 +72,7 @@ public:
                           break;
                         }
                         case 3: this -> setState(0);break;
-                        case 4: this->setState(5);break;
+                        case 4: this->setState(6);break;
                     }
                     break;
                 }
@@ -396,20 +396,107 @@ public:
                             break;
                         }
                         case 3:this->setState(0);break;
-                        case 4:this->setState(5);break;
+                        case 4:this->setState(6);break;
                     }
                     break;
                 }
                 case 5:
                 {
-                    ///добавить сохранение данных в файл и его перезапись
-                    exit(0);
+                    int choice1;
+                    std::cout << "----SORT INFO MENU-----" << std::endl;
+                    std::cout << "1.Sort the Individuals" << std::endl;
+                    std::cout <<"2.Sort the Organizations" << std::endl;
+                    std::cout <<"3.Back to Main Menu" << std::endl;
+                    std::cout << "4.EXIT" << std::endl;
+                    std::cout <<"Enter your choice :" ;
+                    std::cin >> choice1;
+                    switch (choice1)
+                    {
+                        case 1: {
+                            system("cls");
+                            int choice2;
+                            std::cout << "----SORT INDIVUAL MENU-----" << std::endl;
+                            std::cout << "1.Sort by ID" << std::endl;
+                            std::cout << "2.Sort by Surname" << std::endl;
+                            std::cout <<"Enter your choice :" ;
+                            std::cin >> choice2;
+                            switch (choice2) {
+                                case 1: {
+                                    std::sort(IndividualData.begin() , IndividualData.end() , UKCompare);
+                                    this->setState(0);
+                                    break;
+                                }
+                                case 2: {
+                                    std::sort(IndividualData.begin() , IndividualData.end() , SurnameCompare);
+                                    this->setState(0);
+                                    break;
+                                }
 
+                            }
+                            break;
+                        }
+                        case 2:
+                        {
+                            system("cls");
+                            int choice2;
+                            std::cout << "----SORT ORGANIZATION MENU-----" << std::endl;
+                            std::cout << "1.Sort by ID" << std::endl;
+                            std::cout << "2.Sort by Name" << std::endl;
+                            std::cout <<"Enter your choice :" ;
+                            std::cin >> choice2;
+                            switch(choice2)
+                            {
+                                case 1:
+                                {
+                                    std::sort(OrganizationData.begin() , OrganizationData.end() , IDCompare);
+                                    this->setState(0);
+                                    break;
+                                }
+                                case 2:
+                                {
+                                    std::sort(OrganizationData.begin() , OrganizationData.end() , NameCompare);
+                                    this->setState(0);
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                        case 3:this->setState(0);break;
+                        case 4:this->setState(6);break;
+
+                    }
+                    break;
+
+                }
+                case 6:
+                {
+                    writeData(IndividualData , OrganizationData);
+                    exit(0);
                 }
             }
 
         };
     }
+
+    static bool IDCompare(Organization o1 ,Organization o2)
+    {
+        return o1.getID() > o2.getID();
+    }
+
+    static bool NameCompare(Organization o1, Organization o2)
+    {
+        return o1.getName() > o2.getName();
+    }
+    static bool UKCompare(Individual i1 , Individual i2)
+    {
+        return i1.getUniq_key() > i2.getUniq_key();
+    }
+
+    static bool SurnameCompare(Individual i1 , Individual i2)
+    {
+        return i1.getSurname() > i2.getSurname();
+    }
+
 
     void setState(int state)
     {

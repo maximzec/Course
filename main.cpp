@@ -6,11 +6,13 @@
 #include <iterator>
 
 int main() {
-   Menu menu = Menu();
-   menu.printMenu();
-    for(;;){
+    Menu menu = Menu();
+    for(;;)
+    {
         menu.printMenu();
     }
+
+
 
     return 0;
 }
